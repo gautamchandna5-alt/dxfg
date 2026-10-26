@@ -19,14 +19,17 @@ function App() {
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
-  // Fetch DRF backend data
+// Fetch DRF backend data
   useEffect(() => {
     const fetchData = async () => {
-      // Formats local Date to YYYY-MM-DD accounting for timezones safely
       const dateString = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
+
+      const API_BASE_URL = import.meta.env.DEV 
+        ? 'http://127.0.0.1:8000' 
+        : 'https://my-backend-name.onrender.com'; 
       
       try {
-        const response = await fetch(`http://127.0.0.1:8000/api/energy/?date=${dateString}`);
+        const response = await fetch(`${API_BASE_URL}/api/energy/?date=${dateString}`);
         if (!response.ok) throw new Error("Failed to fetch data");
         const data = await response.json();
         

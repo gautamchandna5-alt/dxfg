@@ -25,7 +25,12 @@ SECRET_KEY = 'django-insecure-uw-_5i&l&imo7k9sb&(4ah-utq6li44n*!s#w9-s65=m-j%qn7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'your-backend-name.onrender.com']
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://dxfg-sigma.vercel.app/",
+]
 
 
 # Application definition
