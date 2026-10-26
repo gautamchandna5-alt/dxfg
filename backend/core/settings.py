@@ -29,7 +29,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'your-backend-name.onrender.com']
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://dxfg-sigma.vercel.app/",
+    "https://dxfg-sigma.vercel.app",
 ]
 
 
