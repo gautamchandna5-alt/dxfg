@@ -19,7 +19,7 @@ Ensure Docker Desktop is running, navigate to the root directory, and execute th
 
 1. `docker-compose up --build -d`
 2. `docker-compose exec backend python3 manage.py migrate`
-3. `docker-compose exec backend python3 manage.py fetch_january_data`
+3. `docker-compose exec backend python3 manage.py fetch_january_data`(this may take some time)
 
 **AI Disclosure**
 As permitted in the requirements, I used AI tools (Gemini) to assist with brainstorming the Django data-caching strategy, scaffolding boilerplate Docker configurations, and reviewing semantic HTML best practices.
