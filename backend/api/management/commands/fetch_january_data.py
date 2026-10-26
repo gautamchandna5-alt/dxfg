@@ -39,16 +39,14 @@ class Command(BaseCommand):
             generation = item.get("generation")
             
             if start_time_str and generation is not None:
-                # MATCH EXACT DATETIME FORMAT
+            
                 start_time = parse_datetime(start_time_str)
-                
-                # Apply forecast to the :00 block
+            
                 WindEnergy.objects.update_or_create(
                     start_time=start_time,
                     defaults={'estimated_generation': generation}
                 )
-                
-                # Forward-fill the same forecast to the :30 block
+            
                 WindEnergy.objects.update_or_create(
                     start_time=start_time + timedelta(minutes=30),
                     defaults={'estimated_generation': generation}
