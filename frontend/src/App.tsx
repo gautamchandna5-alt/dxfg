@@ -3,32 +3,42 @@ import './App.css';
 import Calander from './components/Calander';
 import Chart from './components/Chart';
 import AnimatedNumber from './components/AnimatedNumber';
-import { summaryMetrics } from './components/data';
 
 function App() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [metrics, setMetrics] = useState(summaryMetrics);
+  // Lock initial state to January 1, 2026
+  const [selectedDate, setSelectedDate] = useState(new Date(2026, 0, 1));
+  const [metrics, setMetrics] = useState({ totalEstimated: 0, totalActual: 0, extraToBuy: 0, errorPercentage: 0 });
+  const [chartData, setChartData] = useState([]);
+  
   const [isDarkMode, setIsDarkMode] = useState(() => {
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem('theme') === 'dark';
-  }
-  return false;
-});
-
-useEffect(() => {
-  localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-}, [isDarkMode]);
+    if (typeof window !== 'undefined') return localStorage.getItem('theme') === 'dark';
+    return false;
+  });
 
   useEffect(() => {
-    setMetrics({
-      totalEstimated: Math.floor(Math.random() * 4000) + 1000,
-      totalActual: Math.floor(Math.random() * 4000) + 1000,
-      extraToBuy: Math.floor(Math.random() * 200),
-      errorPercentage: parseFloat((Math.random() * 5).toFixed(2)),
-    });
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
+  // Fetch DRF backend data
+  useEffect(() => {
+    const fetchData = async () => {
+      // Formats local Date to YYYY-MM-DD accounting for timezones safely
+      const dateString = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
+      
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/energy/?date=${dateString}`);
+        if (!response.ok) throw new Error("Failed to fetch data");
+        const data = await response.json();
+        
+        setMetrics(data.summaryMetrics);
+        setChartData(data.chartData);
+      } catch (error) {
+        console.error("Error loading energy data:", error);
+      }
+    };
+
+    fetchData();
   }, [selectedDate]);
-
-
 
   return (
     <div className={`dashboard-layout ${isDarkMode ? 'dark' : ''}`}>
@@ -39,45 +49,34 @@ useEffect(() => {
       <main className="data-panel">
         <header className="dashboard-header">
           <h1 className="sr-only">Energy Production Dashboard</h1>
-          <button 
-            className="theme-toggle"
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            aria-label="Toggle Dark Mode"
-          >
+          <button className="theme-toggle" onClick={() => setIsDarkMode(!isDarkMode)}>
             {isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
           </button>
         </header>
 
-        <section aria-label="Energy Summary Metrics" className="summary-section">
+        <section className="summary-section">
           <article className="metric-card">
             <h3>Estimated Energy</h3>
-            <p className="metric-value">
-              <AnimatedNumber value={metrics.totalEstimated} /> <span>MW</span>
-            </p>
+            <p className="metric-value"><AnimatedNumber value={metrics.totalEstimated} /> <span>MW</span></p>
           </article>
           <article className="metric-card">
             <h3>Actual Energy</h3>
-            <p className="metric-value">
-              <AnimatedNumber value={metrics.totalActual} /> <span>MW</span>
-            </p>
+            <p className="metric-value"><AnimatedNumber value={metrics.totalActual} /> <span>MW</span></p>
           </article>
           <article className="metric-card alert">
             <h3>Extra to Buy</h3>
-            <p className="metric-value">
-              <AnimatedNumber value={metrics.extraToBuy} /> <span>MW</span>
-            </p>
+            <p className="metric-value"><AnimatedNumber value={metrics.extraToBuy} /> <span>MW</span></p>
           </article>
           <article className="metric-card">
             <h3>Error</h3>
-            <p className="metric-value">
-              <AnimatedNumber value={metrics.errorPercentage} /> <span>%</span>
-            </p>
+            <p className="metric-value"><AnimatedNumber value={metrics.errorPercentage} /> <span>%</span></p>
           </article>
         </section>
 
-        <section aria-labelledby="chart-heading" className="chart-section">
-          <h2 id="chart-heading">Wind Energy: <time dateTime={selectedDate.toISOString()}>{selectedDate.toDateString()}</time></h2>
-          <Chart isDarkMode={isDarkMode} /> 
+        <section className="chart-section">
+          <h2>Wind Energy: <time dateTime={selectedDate.toISOString()}>{selectedDate.toDateString()}</time></h2>
+          {/* Pass the dynamically fetched data to the Chart */}
+          <Chart isDarkMode={isDarkMode} data={chartData} /> 
         </section>
       </main>
     </div>
