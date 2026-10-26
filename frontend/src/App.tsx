@@ -26,7 +26,7 @@ function App() {
 
       const API_BASE_URL = import.meta.env.DEV 
         ? 'http://127.0.0.1:8000' 
-        : 'https://energy-dashboard-gtze.onrender.com/'; 
+        : 'https://energy-dashboard-gtze.onrender.com'; 
       
       try {
         const response = await fetch(`${API_BASE_URL}/api/energy/?date=${dateString}`);
