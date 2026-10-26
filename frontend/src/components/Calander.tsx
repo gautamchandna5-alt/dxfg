@@ -7,7 +7,7 @@ interface CalanderProps {
 }
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const VIEW_MONTH = 0; // 0-indexed for January
+const VIEW_MONTH = 0;
 const VIEW_YEAR = 2026;
 
 export default function Calander({ selectedDate, onSelectDate }: CalanderProps) {
