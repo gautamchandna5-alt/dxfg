@@ -22,5 +22,5 @@ Ensure Docker Desktop is running, navigate to the root directory, and execute th
 3. `docker-compose exec backend python3 manage.py fetch_january_data`(this may take some time)
 
 **AI Disclosure**
-As permitted in the requirements, I used AI tools (Gemini) to assist with brainstorming the Django data-caching strategy, scaffolding boilerplate Docker configurations, and reviewing semantic HTML best practices.
+ I used AI tools (Gemini) to assist with brainstorming the Django data-caching strategy, scaffolding boilerplate Docker configurations, and reviewing semantic HTML best practices.
 
